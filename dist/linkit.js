@@ -21,7 +21,7 @@ else
 										newWindow: false,
 										caseSensitive: false
 									}, options);
-			if (settings.link.url instanceof Array)
+			if (settings.link.url.constructor !== 'Array')
 				settings.link.url = [settings.link.url];
 
 			let str = $(this);
