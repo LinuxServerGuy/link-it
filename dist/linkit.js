@@ -1,44 +1,54 @@
-if (typeof jQuery === 'undefined') {
-    console.log('Link it requires jQuery to run');
-} else {
-    (function ($) {
-        "use strict";
+if (typeof jQuery === 'undefined')
+{
+	console.log('Link it requires jQuery to run');
+}
+else
+{
+	(function ($)
+	{
+		"use strict";
 
-        $.fn.linkIt = function (options) {
-            var settings = $.extend({
-                linkColor: "#ff0000",
-                linkClass: '',
-                link: {
-                    word: '',
-                    url: '#'
-                },
-                linkTitle: '',
-                newWindow: false,
-                caseSensitive: false
-            }, options);
+		$.fn.linkIt = function (options)
+		{
+			let settings = $.extend({
+										linkColor: "#ff0000",
+										linkClass: '',
+										link: {
+											word: '',
+											url: ['#']
+										},
+										linkTitle: '',
+										newWindow: false,
+										caseSensitive: false
+									}, options);
+			if (settings.link.url instanceof Array)
+				settings.link.url = [settings.link.url];
 
-            var str = $(this);
-            var newLink = $('<a></a>');
+			let str = $(this);
+			let newLink = $('<a></a>');
 
-            str.each(function (index, element) {
-                var strHtml = $(this).html(),
-                    query = "\\b" + settings.link.word + "\\b",
-                    flags = settings.caseSensitive === true ? 'g' : 'gi',
-                    target = settings.newWindow === true ? '_blank"' : '_self',
-                    linkClass = settings.linkClass !== '' ? settings.linkClass : '',
-                    title = settings.linkTitle !== '' ? newLink.attr('title', settings.linkTitle) : '',
-                    regex = new RegExp(query, flags);
+			str.each(function (index, element)
+					 {
+						 let randomLink = settings.link.url[Math.floor(Math.random() * settings.link.url.length)];
 
-                newLink.attr('href', settings.link.url);
-                newLink.attr('target', target);
-                newLink.css('color', settings.linkColor);
-                newLink.addClass(linkClass);
-                newLink.text(settings.link.word);
-                newLink = newLink.get(0).outerHTML;
+						 let strHtml = $(this).html(),
+							 query = "\\b" + settings.link.word + "\\b",
+							 flags = settings.caseSensitive === true ? 'g' : 'gi',
+							 target = settings.newWindow === true ? '_blank"' : '_self',
+							 linkClass = settings.linkClass !== '' ? settings.linkClass : '',
+							 title = settings.linkTitle !== '' ? newLink.attr('title', settings.linkTitle) : '',
+							 regex = new RegExp(query, flags);
 
-                var result = strHtml.replace(regex, newLink);
-                return $(this).html(result);
-            });
-        };
-    })(jQuery);
+						 newLink.attr('href', randomLink);
+						 newLink.attr('target', target);
+						 newLink.css('color', settings.linkColor);
+						 newLink.addClass(linkClass);
+						 newLink.text(settings.link.word);
+						 newLink = newLink.get(0).outerHTML;
+
+						 let result = strHtml.replace(regex, newLink);
+						 return $(this).html(result);
+					 });
+		};
+	})(jQuery);
 }

@@ -1,43 +1,54 @@
-if (typeof jQuery === 'undefined'){
-    console.log('Link it requires jQuery to run');
-}else{
-    (function ($) {
-        "use strict";
-        $.fn.linkIt = function (options) {
-            let settings = $.extend({
-                linkColor: "#ff0000",
-                linkClass: '',
-                link: {
-                    word :'',
-                    url: '#'
-                },
-                linkTitle: '',
-                newWindow: false,
-                caseSensitive: false
-            }, options);
-            
-            let str = $(this);
-            let newLink = $('<a></a>');
-            
-            str.each(function (index, element) {
-                let strHtml = $(this).html(),
-                query = "\\b" + settings.link.word + "\\b",
-                flags = settings.caseSensitive === true ? 'g' : 'gi',
-                target = settings.newWindow === true ? '_blank"' : '_self',
-                linkClass = settings.linkClass !== '' ? settings.linkClass : '',
-                title = settings.linkTitle !== '' ? newLink.attr('title', settings.linkTitle) : '',
-                regex = new RegExp(query, flags);
+if (typeof jQuery === 'undefined')
+{
+	console.log('Link it requires jQuery to run');
+}
+else
+{
+	(function ($)
+	{
+		"use strict";
 
-                newLink.attr('href',settings.link.url);
-                newLink.attr('target', target);
-                newLink.css('color',settings.linkColor);
-                newLink.addClass(linkClass);
-                newLink.text(settings.link.word);
-                newLink = newLink.get(0).outerHTML;
+		$.fn.linkIt = function (options)
+		{
+			let settings = $.extend({
+										linkColor: "#ff0000",
+										linkClass: '',
+										link: {
+											word: '',
+											url: ['#']
+										},
+										linkTitle: '',
+										newWindow: false,
+										caseSensitive: false
+									}, options);
+			if (settings.link.url.constructor !== 'Array')
+				settings.link.url = [settings.link.url];
 
-                let result = strHtml.replace(regex, newLink);
-                return $(this).html(result);
-            });
-        };
-    }(jQuery));
+			let str = $(this);
+			let newLink = $('<a></a>');
+
+			str.each(function (index, element)
+					 {
+						 let randomLink = settings.link.url[Math.floor(Math.random() * settings.link.url.length)];
+
+						 let strHtml = $(this).html(),
+							 query = "\\b" + settings.link.word + "\\b",
+							 flags = settings.caseSensitive === true ? 'g' : 'gi',
+							 target = settings.newWindow === true ? '_blank"' : '_self',
+							 linkClass = settings.linkClass !== '' ? settings.linkClass : '',
+							 title = settings.linkTitle !== '' ? newLink.attr('title', settings.linkTitle) : '',
+							 regex = new RegExp(query, flags);
+
+						 newLink.attr('href', randomLink);
+						 newLink.attr('target', target);
+						 newLink.css('color', settings.linkColor);
+						 newLink.addClass(linkClass);
+						 newLink.text(settings.link.word);
+						 newLink = newLink.get(0).outerHTML;
+
+						 let result = strHtml.replace(regex, newLink);
+						 return $(this).html(result);
+					 });
+		};
+	})(jQuery);
 }
