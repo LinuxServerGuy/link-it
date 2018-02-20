@@ -21,34 +21,42 @@ else
 										newWindow: false,
 										caseSensitive: false
 									}, options);
-			if (settings.link.url.constructor !== 'Array')
+			if (!(settings.link.url instanceof Array))
 				settings.link.url = [settings.link.url];
 
 			let str = $(this);
-			let newLink = $('<a></a>');
+			console.log(str) ;
 
-			str.each(function (index, element)
-					 {
-						 let randomLink = settings.link.url[Math.floor(Math.random() * settings.link.url.length)];
+			let search = "\\b" + settings.link.word + "\\b";
+			let content = $(this).html();
+			let counter = 0 ;
+			do
+			{
+				counter++ ;
+				let newLink = $('<a></a>');
 
-						 let strHtml = $(this).html(),
-							 query = "\\b" + settings.link.word + "\\b",
-							 flags = settings.caseSensitive === true ? 'g' : 'gi',
-							 target = settings.newWindow === true ? '_blank"' : '_self',
-							 linkClass = settings.linkClass !== '' ? settings.linkClass : '',
-							 title = settings.linkTitle !== '' ? newLink.attr('title', settings.linkTitle) : '',
-							 regex = new RegExp(query, flags);
+				let randomLink = settings.link.url[Math.floor(Math.random() * settings.link.url.length)];
 
-						 newLink.attr('href', randomLink);
-						 newLink.attr('target', target);
-						 newLink.css('color', settings.linkColor);
-						 newLink.addClass(linkClass);
-						 newLink.text(settings.link.word);
-						 newLink = newLink.get(0).outerHTML;
+				let	query = search,
+					flags = settings.caseSensitive === true ? '' : 'i',
+					target = settings.newWindow === true ? '_blank"' : '_self',
+					linkClass = settings.linkClass !== '' ? settings.linkClass : '',
+					title = settings.linkTitle !== '' ? newLink.attr('title', settings.linkTitle) : '',
+					regex = new RegExp(query, flags);
 
-						 let result = strHtml.replace(regex, newLink);
-						 return $(this).html(result);
-					 });
-		};
+				newLink.attr('href', randomLink);
+				newLink.attr('target', target);
+				newLink.css('color', settings.linkColor);
+				newLink.addClass(linkClass);
+				newLink.text(settings.link.word);
+				newLink = newLink.get(0).outerHTML;
+
+				content = content.replace(regex, newLink);
+			}
+			while(content.match(search)) ;
+
+			return $(this).html(content);
+		}
+
 	})(jQuery);
 }
